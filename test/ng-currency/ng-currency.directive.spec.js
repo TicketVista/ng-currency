@@ -1,7 +1,16 @@
 import ngCurrency from '../../src/ng-currency.module.js';
 
 describe('ngCurrency directive tests', function() {
-  let elem, elemdefault, scope, elemmo, elemfpos, elemfpos5, elemcurrdisabled, elemnreq, elemfastfraction, elemminmaxvar;
+  var elem;
+  var elemdefault;
+  var scope;
+  var elemmo;
+  var elemfpos;
+  var elemfpos5;
+  var elemcurrdisabled;
+  var elemnreq;
+  var elemfastfraction;
+  var elemminmaxvar;
 
   beforeEach(angular.mock.module(ngCurrency));
 
@@ -10,7 +19,6 @@ describe('ngCurrency directive tests', function() {
       return {
         restrict: 'A',
         require: 'ngModel',
-        scope: {},
         link: function(scope, elem, attrs, ngModel) {
           ngModel.$parsers.push(function(viewValue) {
             return Math.round(parseFloat(viewValue || 0) * 100);
@@ -165,26 +173,6 @@ describe('ngCurrency directive tests', function() {
       scope.maxi = 3;
       scope.$digest();
       expect(elem.hasClass('ng-invalid-max')).toEqual(true);
-    })
-  );
-
-  it('should do nothing when max value is not a valid number',
-    angular.mock.inject(function($rootScope, $compile) {
-      elem = $compile(elemminmaxvar)(scope);
-      scope.testModel = 4;
-      scope.maxi = '3px';
-      scope.$digest();
-      expect(elem.hasClass('ng-valid-max')).toEqual(true);
-    })
-  );
-
-  it('should do nothing when min value is not a valid number',
-    angular.mock.inject(function($rootScope, $compile) {
-      elem = $compile(elemminmaxvar)(scope);
-      scope.testModel = 4;
-      scope.mini = '5px';
-      scope.$digest();
-      expect(elem.hasClass('ng-valid-min')).toEqual(true);
     })
   );
 

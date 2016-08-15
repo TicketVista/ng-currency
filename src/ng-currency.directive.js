@@ -6,48 +6,40 @@
  * License: MIT
  */
 
-/* @ngInject */
 export default function ngCurrency($filter, $locale, $timeout) {
   return {
     require: 'ngModel',
-    link: (scope, element, attrs, ngModel) => {
+    scope: {},
+    link: function(scope, element, attrs, ngModel) {
       if (attrs.ngCurrency === 'false') return;
-      let initialized, min, max, currencySymbol, ngRequired, fraction;
 
-      attrs.$observe('min', (value) => {
-        min = Number(value);
-        ngModel.$validate();
+      attrs.$observe('min', function(v) {
+        scope.min = v;
         reloadThis();
       });
-      attrs.$observe('max', (value) => {
-        max = Number(value);
-        ngModel.$validate();
+      attrs.$observe('max', function(v) {
+        scope.max = v;
         reloadThis();
       });
-      attrs.$observe('currencySymbol', (value) => {
-        currencySymbol = value;
+      attrs.$observe('currencySymbol', function(v) {
+        scope.currencySymbol = v;
         reloadThis();
       });
-      attrs.$observe('ngRequired', (value) => {
-        ngRequired = value;
+      attrs.$observe('ngRequired', function(v) {
+        scope.ngRequired = v;
         reloadThis();
       });
-      attrs.$observe('fraction', (value) => {
-        fraction = value;
+      attrs.$observe('fraction', function(v) {
+        scope.fraction = v;
         reloadThis();
       });
 
-      fraction = fraction || 2;
-
-      $timeout(() => {
-        initialized = true;
-        reloadThis();
-      });
+      scope.fraction = scope.fraction || 2;
 
       function reloadThis() {
-        if (initialized) {
-          scope.$emit('currencyRedraw');
-        }
+        $timeout(function() {
+          scope.$emit("currencyRedraw");
+        });
       }
 
       function decimalRex(dChar) {
@@ -55,7 +47,7 @@ export default function ngCurrency($filter, $locale, $timeout) {
       }
 
       function clearRex(dChar) {
-        return RegExp("\\-{0,1}((\\" + dChar + ")|([0-9]{1,}\\" + dChar + "?))&?[0-9]{0," + fraction + "}", 'g');
+        return RegExp("\\-{0,1}((\\" + dChar + ")|([0-9]{1,}\\" + dChar + "?))&?[0-9]{0," + scope.fraction + "}", 'g');
       }
 
       function clearValue(value) {
@@ -65,12 +57,12 @@ export default function ngCurrency($filter, $locale, $timeout) {
 
         if (value.indexOf($locale.NUMBER_FORMATS.DECIMAL_SEP) === -1 &&
           value.indexOf('.') !== -1 &&
-          fraction > 0) {
+          scope.fraction > 0) {
           dSeparator = '.';
         }
 
         // Replace negative pattern to minus sign (-)
-        var neg_dummy = $filter('currency')("-1", getCurrencySymbol(), fraction);
+        var neg_dummy = $filter('currency')("-1", getCurrencySymbol(), scope.fraction);
         var neg_regexp = RegExp("[0-9." + $locale.NUMBER_FORMATS.DECIMAL_SEP + $locale.NUMBER_FORMATS.GROUP_SEP + "]+");
         var neg_dummy_txt = neg_dummy.replace(neg_regexp.exec(neg_dummy), "");
         var value_dummy_txt = value.replace(neg_regexp.exec(value), "");
@@ -94,8 +86,8 @@ export default function ngCurrency($filter, $locale, $timeout) {
       }
 
       function getCurrencySymbol() {
-        if (currencySymbol !== undefined) {
-          return currencySymbol;
+        if (scope.currencySymbol !== undefined) {
+          return scope.currencySymbol;
         }
         return $locale.NUMBER_FORMATS.CURRENCY_SYM;
       }
@@ -119,7 +111,7 @@ export default function ngCurrency($filter, $locale, $timeout) {
         if (cVal === "." || cVal === "-.") {
           cVal = ".0";
         }
-        return Number(cVal);
+        return parseFloat(cVal);
       });
 
       element.on("blur", function() {
@@ -128,25 +120,43 @@ export default function ngCurrency($filter, $locale, $timeout) {
       });
 
       ngModel.$formatters.unshift(function(value) {
-        return $filter('currency')(value, getCurrencySymbol(), fraction);
+        return $filter('currency')(value, getCurrencySymbol(), scope.fraction);
       });
 
-      ngModel.$validators.min = function(value) {
-        if (!ngRequired && isNaN(value)) {
+      ngModel.$validators.min = function(cVal) {
+        if (!scope.ngRequired && isNaN(cVal)) {
           return true;
         }
-        return !min || value >= min;
+        if (typeof scope.min !== 'undefined') {
+          return cVal >= parseFloat(scope.min);
+        }
+        return true;
       };
 
-      ngModel.$validators.max = function(value) {
-        if (!ngRequired && isNaN(value)) {
+      scope.$watch('min', function(val) {
+        ngModel.$validate();
+      });
+
+      ngModel.$validators.max = function(cVal) {
+        if (!scope.ngRequired && isNaN(cVal)) {
           return true;
         }
-        return !max || value <= max;
+        if (typeof scope.max !== 'undefined') {
+          return cVal <= parseFloat(scope.max);
+        }
+        return true;
       };
 
-      ngModel.$validators.fraction = function(value) {
-        return !value || !isNaN(value);
+      scope.$watch('max', function(val) {
+        ngModel.$validate();
+      });
+
+      ngModel.$validators.fraction = function(cVal) {
+        if (cVal && isNaN(cVal)) {
+          return false;
+        }
+
+        return true;
       };
 
       scope.$on('currencyRedraw', function() {
@@ -160,7 +170,7 @@ export default function ngCurrency($filter, $locale, $timeout) {
         if (isNaN(viewValue) || viewValue === '' || viewValue === null) {
           viewValue = '';
         } else {
-          viewValue = Number(viewValue).toFixed(fraction);
+          viewValue = parseFloat(viewValue).toFixed(scope.fraction);
         }
         ngModel.$setViewValue(viewValue);
         ngModel.$render();
