@@ -299,14 +299,6 @@ describe('ngCurrency directive tests', () => {
           scope.$digest();
           expect(element.hasClass('ng-valid-max')).toBeTruthy();
         });
-
-        it('should support invalid ngModel values', () => {
-          scope.value = '';
-          scope.max = -0.01;
-          scope.$digest();
-          expect(element.hasClass('ng-valid-max')).toBeTruthy();
-          expect(element.val()).toEqual('');
-        });
       });
 
       describe('Hard Cap', () => {
@@ -423,14 +415,6 @@ describe('ngCurrency directive tests', () => {
           scope.value = 4;
           scope.$digest();
           expect(element.hasClass('ng-valid-min')).toBeTruthy();
-        });
-
-        it('should support invalid ngModel values', () => {
-          scope.value = '';
-          scope.min = 0.01;
-          scope.$digest();
-          expect(element.hasClass('ng-valid-min')).toBeTruthy();
-          expect(element.val()).toEqual('');
         });
       });
 
