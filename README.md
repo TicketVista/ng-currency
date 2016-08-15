@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/aguirrel/ng-currency.svg?branch=master)](https://travis-ci.org/aguirrel/ng-currency)
-
 ngCurrency is a directive that enables seamless use of currency inputs.
 
 Main features:
