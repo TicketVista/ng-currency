@@ -169,6 +169,7 @@ angular.module('ng-currency', [])
                     }
                     ngModel.$setViewValue(viewValue);
                     ngModel.$render();
+                    this.select();
                 });
             }
         }
