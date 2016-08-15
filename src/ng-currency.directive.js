@@ -2,7 +2,7 @@
  * ng-currency
  * http://alaguirre.com/
 
- * Version: 0.11.4 - 2016-08-15
+ * Version: 0.10.1 - 2016-06-05
  * License: MIT
  */
 
