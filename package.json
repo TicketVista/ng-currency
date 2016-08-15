@@ -1,7 +1,14 @@
 {
   "name": "ng-currency",
+<<<<<<< HEAD
   "version": "0.11.3",
   "main": "dist/ng-currency.js",
+=======
+  "version": "0.10.0",
+  "authors": [
+    "Luis Aguirre <luis@alaguirre.com>"
+  ],
+>>>>>>> parent of a13e708... Version v0.10.1
   "description": "Directive that works in conjunction with currency filter.",
   "homepage": "http://alaguirre.com",
   "bugs": "https://github.com/salte-io/salte-seed/issues",
@@ -18,14 +25,29 @@
     "directive",
     "filter"
   ],
+<<<<<<< HEAD
   "scripts": {
     "tdd": "karma start",
     "test": "karma start --single-run",
     "build:dev": "webpack -d",
     "build:prod": "webpack -p"
+=======
+  "license": "MIT",
+  "homepage": "http://alaguirre.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.4"
+>>>>>>> parent of a13e708... Version v0.10.1
   },
   "license": "MIT",
   "devDependencies": {
+<<<<<<< HEAD
     "angular": "~1.3",
     "angular-mocks": "~1.3",
     "babel-core": "6.11.4",
@@ -51,5 +73,8 @@
     "phantomjs-prebuilt": "2.1.8",
     "sinon": "^1.17.5",
     "webpack": "1.13.1"
+=======
+    "angular-mocks": "~1.3.4"
+>>>>>>> parent of a13e708... Version v0.10.1
   }
 }
