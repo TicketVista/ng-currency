@@ -14,6 +14,7 @@ export default function ngCurrency($filter, $locale, $timeout) {
       let initialized, hardCap, min, max, currencySymbol, ngRequired;
       let active = true;
       let fraction = 2;
+	  let autoSelect = true;
 
       attrs.$observe('ngCurrency', (value) => {
         active = (value !== 'false');
@@ -43,6 +44,11 @@ export default function ngCurrency($filter, $locale, $timeout) {
         fraction = value || 2;
         refresh();
       });
+	  
+	  attrs.$observe('autoSelect', (value) => {
+	      autoSelect = (value !== 'false'); 
+          refresh();
+	  });
 
       $timeout(() => {
         initialized = true;
@@ -193,6 +199,9 @@ export default function ngCurrency($filter, $locale, $timeout) {
           ngModel.$setViewValue(viewValue);
           ngModel.$render();
           element.triggerHandler('focus');
+          if (autoSelect) {
+              element.select();
+          }		  
         }
       });
 
