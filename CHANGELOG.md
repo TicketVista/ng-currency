@@ -1,7 +1,3 @@
-## 0.11.3
-
-* Fixed a bug which fields becomes dirty instead of pristine
-
 ## 0.11.2
 
 * Fixed an issue which made it impossible to select content of the input field on focus
